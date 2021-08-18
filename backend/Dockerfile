@@ -11,7 +11,7 @@ RUN python --version
 RUN pip install -r requirements.txt
 RUN django-admin startproject backend .
 #COPY backend/settings.py /usr/src/app/backend/
-RUN echo "ALLOWED_HOSTS = ['144.202.8.17']" >> /usr/src/app/backend/settings.py
+RUN echo "ALLOWED_HOSTS = ['144.202.8.17','localhost','127.0.0.1']" >> /usr/src/app/backend/settings.py
 RUN echo "DEBUG = False" >> /usr/src/app/backend/settings.py
 COPY . .
 
