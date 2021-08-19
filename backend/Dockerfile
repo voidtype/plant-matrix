@@ -18,5 +18,7 @@ RUN echo "ALLOWED_HOSTS = ['144.202.8.17','localhost','127.0.0.1']" >> /usr/src/
 RUN echo "DEBUG = False" >> /usr/src/app/backend/settings.py
 COPY . .
 
+RUN adduser --disabled-password --no-create-home app
+USER app
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
