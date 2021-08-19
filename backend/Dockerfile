@@ -8,6 +8,9 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 COPY requirements.txt ./
 RUN python --version
+RUN apt update
+RUN apt install -y postgresql-client build-essential
+RUN apt install -y libpq-dev musl-dev
 RUN pip install -r requirements.txt
 RUN django-admin startproject backend .
 #COPY backend/settings.py /usr/src/app/backend/
