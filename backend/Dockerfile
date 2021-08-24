@@ -1,24 +1,31 @@
-FROM python:3
+FROM python:3.9-alpine3.13
+LABEL maintainer="londonappdeveloper.com"
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+ENV PYTHONUNBUFFERED 1
 
-WORKDIR /usr/src/app
-COPY requirements.txt ./
-RUN python --version
-RUN apt update
-RUN apt install -y postgresql-client build-essential
-RUN apt install -y libpq-dev musl-dev
-RUN pip install -r requirements.txt
-RUN django-admin startproject backend .
-#COPY backend/settings.py /usr/src/app/backend/
-RUN echo "ALLOWED_HOSTS = ['144.202.8.17','localhost','127.0.0.1']" >> /usr/src/app/backend/settings.py
-RUN echo "DEBUG = False" >> /usr/src/app/backend/settings.py
-COPY . .
+COPY ./requirements.txt /requirements.txt
+COPY ./app /app
+COPY ./scripts /scripts
 
-RUN adduser --disabled-password --no-create-home app
-USER app
+WORKDIR /app
 EXPOSE 8000
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-deps \
+        build-base postgresql-dev musl-dev linux-headers && \
+    /py/bin/pip install -r /requirements.txt && \
+    apk del .tmp-deps && \
+    adduser --disabled-password --no-create-home app && \
+    mkdir -p /vol/web/static && \
+    mkdir -p /vol/web/media && \
+    chown -R app:app /vol && \
+    chmod -R 755 /vol && \
+    chmod -R +x /scripts
+
+ENV PATH="/scripts:/py/bin:$PATH"
+
+USER app
+
+CMD ["run.sh"]
