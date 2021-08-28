@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'graphene_django',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +56,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = ALLOWED_HOSTS #("http://localhost:8080",)
+
 
 ROOT_URLCONF = 'app.urls'
 
@@ -88,6 +95,10 @@ DATABASES = {
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
     }
+}
+
+GRAPHENE = {
+    "SCHEMA":"core.schema.schema",
 }
 
 
