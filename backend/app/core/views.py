@@ -1,14 +1,21 @@
 from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
-from .models import Sample
+from django.views.generic import ListView, DetailView
+
+from .models import Post
+
+
+class HomeView(ListView):
+    model = Post
+    template_name = 'home.html'
 
 
 def index(request):
-    samples = Sample.objects.order_by('attachment')[:5]
+    posts = Post.objects.all()[:5]
     template = loader.get_template('index.html')
     context = {
-        'samples': samples,
+        'posts': posts,
     }
     return HttpResponse(template.render(context, request))
 

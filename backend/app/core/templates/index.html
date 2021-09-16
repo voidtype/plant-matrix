@@ -1,7 +1,9 @@
-<html>
-<body>
-{% for sample in samples %}
-oHello <img src=static/media/{{sample.attachment}}></img>
+{%  extends 'base.html' %}
+{%  block content %}
+
+<ul>
+{% for post in posts %}
+    <li>{{ post.title }} - <i>{{ post.subtitle }}</i></li>
 {% endfor %}
-</body>
-<html>
+</ul>
+  {% endblock %}
