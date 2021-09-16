@@ -20,13 +20,14 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from graphene_django.views import GraphQLView
 from core import views
-from core.views import HomeView
+from core.views import HomeView, ArticleView
 
 urlpatterns = [
     path('',views.index, name='index'),
     path('admin/', admin.site.urls),
     path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('home', HomeView.as_view(), name="home"),
+    path('article/<int:pk>', ArticleView.as_view(), name="article-detail")
 ]
 
 if settings.DEBUG:

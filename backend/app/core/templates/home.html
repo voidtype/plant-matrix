@@ -4,7 +4,7 @@
 
 <ul>
 {% for post in object_list %}
-  <li>{{ post.title }} - {{ post.author }} - {{ post.subtitle }}</li>
+  <li><a href="{%  url 'article-detail' post.pk%}">{{ post.title }}</a>  - {{ post.author }} - {{ post.subtitle }}</li>
 {% endfor %}
 </ul>
 {% endblock %}
