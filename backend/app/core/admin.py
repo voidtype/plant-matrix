@@ -1,6 +1,6 @@
 from django.contrib import admin
+from core.models import Sample, Profile, Post, Tag, Device, DeviceConfig
 
-from core.models import Sample, Profile, Post, Tag
 
 
 admin.site.register(Sample)
@@ -12,6 +12,14 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     model = Tag
+
+@admin.register(Device)
+class TagAdmin(admin.ModelAdmin):
+    model = Device
+
+@admin.register(DeviceConfig)
+class TagAdmin(admin.ModelAdmin):
+    model = DeviceConfig
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
