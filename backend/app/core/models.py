@@ -71,7 +71,7 @@ class SensorReading(models.Model):
 
 class DeviceConfig(models.Model):
     device = models.ForeignKey(Device,on_delete=models.CASCADE)
-    bpm = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True, default=0.5)
-    duty = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True, default=0.022)
+    bpm = models.DecimalField(max_digits=22, decimal_places=5, blank=True, null=True, default=0.5)
+    duty = models.DecimalField(max_digits=22, decimal_places=5, blank=True, null=True, default=0.022)
     ledState = models.BooleanField(default=False)
-    pressureMax = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True, default=70)
+    pressureMax = models.DecimalField(max_digits=22, decimal_places=5, blank=True, null=True, default=70)

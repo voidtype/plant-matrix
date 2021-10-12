@@ -3,8 +3,15 @@ from django.template import loader
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
 
-from .models import Post
+from .models import Post,DeviceConfig
 
+from rest_framework import viewsets
+
+from .serializers import DeviceConfigSerializer
+
+class DeviceConfigViewSet(viewsets.ModelViewSet):
+    queryset = DeviceConfig.objects.all().order_by('device')
+    serializer_class = DeviceConfigSerializer
 
 class HomeView(ListView):
     model = Post
