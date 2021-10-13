@@ -3,15 +3,58 @@ from django.template import loader
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
 
-from .models import Post,DeviceConfig
+from django.utils.datastructures import MultiValueDictKeyError
+
+from .models import Post,DeviceConfig,SensorReading,Device
 
 from rest_framework import viewsets
 
-from .serializers import DeviceConfigSerializer
+from .serializers import DeviceConfigSerializer,SensorReadingSerializer
+
 
 class DeviceConfigViewSet(viewsets.ModelViewSet):
     queryset = DeviceConfig.objects.all().order_by('device')
     serializer_class = DeviceConfigSerializer
+
+class SensorReadingViewSet(viewsets.ModelViewSet):
+    queryset = SensorReading.objects.all().order_by('device')
+    serializer_class = SensorReadingSerializer
+    
+    def get_queryset(self):
+        #if we've defined a device, just get it's sensor readings. otherwise get everything
+        try:
+            device = self.get_renderer_context()["request"].query_params['device']
+            ledState = bool(self.get_renderer_context()["request"].query_params.get('ledState'))
+            pumpState = bool(self.get_renderer_context()["request"].query_params.get('pumpState'))
+            solenoidState = bool(self.get_renderer_context()["request"].query_params.get('solenoidState'))
+            psi = self.get_renderer_context()["request"].query_params.get('psi')
+            if (all(v is None for v in [ledState,solenoidState,pumpState,psi])):
+                print("lols")
+                return SensorReading.objects.filter(device=Device(id=device))
+            else:
+                #if we're updating the entire set of variables, no need to get the most recent readings
+                if all([ledState,solenoidState,pumpState,psi]):
+                    obj = SensorReading(
+                    device=Device(id=device),
+                    ledState=ledState,
+                    solenoidState=solenoidState,
+                    pumpState=pumpState,
+                    psi=psi)
+                    obj.save()
+                    return [obj]
+                else: #TODO:otherwise we'll get the most recen
+                    #last =SensorReading.objects.filter(device).latest()
+                    #obj = SensorReading.objects.create(
+                    #    ledState if ledState else last.get
+                    #)
+                    #obj = SensorReading.objects.create(device,ledState,solenoidState,pumpState,psi)
+                    print("def")
+
+                    return SensorReading.objects.all()
+        #TODO: add specificity to this handler
+        except MultiValueDictKeyError as e: #if the device ID isn't found in the request, get all the objects
+            return SensorReading.objects.all()
+
 
 class HomeView(ListView):
     model = Post

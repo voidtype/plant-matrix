@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Sample, Profile, Post, Tag, Device, DeviceConfig
+from core.models import Sample, Profile, Post, Tag, Device, DeviceConfig, SensorReading
 
 
 
@@ -8,6 +8,10 @@ admin.site.register(Sample)
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     model = Profile
+
+@admin.register(SensorReading)
+class SensorReadingAdmin(admin.ModelAdmin):
+    model = SensorReading
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):

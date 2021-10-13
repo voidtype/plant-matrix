@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 import uuid
+import traceback
+import psycopg2.errors
 from datetime import datetime
 
 class Sample(models.Model):
@@ -54,13 +56,16 @@ class SensorReading(models.Model):
     
     #let's overload the save function to account for pk collisions on the time var
     def save(self, *args, **kwargs):
+        traceback.print_stack()
         self.save_and_smear_timestamp(*args, **kwargs)
     
     def save_and_smear_timestamp(self, *args, **kwargs):
         """Recursivly try to save by incrementing the timestamp on duplicate error"""
         try:
             super().save(*args, **kwargs)
-        except IntegrityError as exception:
+            print("saved via super")
+        except psycopg2.errors.UniqueViolation as exception:
+            print("oh no")
             # Only handle the error:
             #   psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "1_1_farms_sensorreading_pkey"
             #   DETAIL:  Key ("time")=(2020-10-01 22:33:52.507782+00) already exists.
