@@ -28,6 +28,7 @@ urlpatterns = [
     path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('home', HomeView.as_view(), name="home"),
     path('article/<int:pk>', ArticleView.as_view(), name="article-detail"),
+    path("upload", views.upload, name="upload"),
 
 ]
 

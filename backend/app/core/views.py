@@ -1,11 +1,16 @@
+import time
 from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
+from django.core.files.storage import FileSystemStorage
+
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
 
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .models import Post,DeviceConfig,SensorReading,Device
+from .models import Post,DeviceConfig,SensorReading,Device,Sample
 
 from rest_framework import viewsets
 
@@ -72,5 +77,17 @@ def index(request):
     }
     return HttpResponse(template.render(context, request))
 
+#TODO: secure this endpoint
+@csrf_exempt
+def upload(request):
+    if request.method == 'POST' and request.FILES['files']:
+        upload = request.FILES['files']
+        fss = FileSystemStorage()
+        uname = str(time.time()) + upload.name
+        file = fss.save(uname, upload)
+        file_url = fss.url(file)
+        Sample.objects.create(attachment=uname)
+        return HttpResponse({file_url})
+    return request
 
 # Create your views here.
