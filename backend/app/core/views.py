@@ -6,19 +6,35 @@ from django.views.generic import ListView, DetailView
 from django.core.files.storage import FileSystemStorage
 
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from rest_framework.response import Response
+
 
 
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .models import Post,DeviceConfig,SensorReading,Device,Sample
+from .models import DeviceConfig,SensorReading,Device,Sample
 
 from rest_framework import viewsets
 
-from .serializers import DeviceConfigSerializer,SensorReadingSerializer
+from .serializers import DeviceConfigSerializer,SensorReadingSerializer,SampleSerializer
+
+
+class SampleViewSet(viewsets.ModelViewSet):
+    queryset = Sample.objects.all().order_by('-id')
+    lookup_field = 'device'
+    serializer_class = SampleSerializer
+    def retrieve(self,request,device):
+        return Response(self.serializer_class(Sample.objects.filter(device=device).order_by('-id').first()).data)
 
 
 class DeviceConfigViewSet(viewsets.ModelViewSet):
     queryset = DeviceConfig.objects.all().order_by('device')
+    def get_queryset(self):
+        device = self.get_renderer_context()["request"].query_params.get('device')
+        if device:
+            return DeviceConfig.objects.filter(device=Device(id=device))[0:]
+        else:
+            return self.queryset
     serializer_class = DeviceConfigSerializer
 
 class SensorReadingViewSet(viewsets.ModelViewSet):
@@ -61,19 +77,12 @@ class SensorReadingViewSet(viewsets.ModelViewSet):
             return SensorReading.objects.all()
 
 
-class HomeView(ListView):
-    model = Post
-    template_name = 'home.html'
-
-class ArticleView(DetailView):
-    model = Post
-    template_name = 'article_details.html'
 
 def index(request):
-    posts = Post.objects.all()[:5]
+    devices = Device.objects.all()[:5]
     template = loader.get_template('index.html')
     context = {
-        'posts': posts,
+        'posts': devices,
     }
     return HttpResponse(template.render(context, request))
 

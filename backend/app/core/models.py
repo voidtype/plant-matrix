@@ -4,47 +4,17 @@ import uuid
 import traceback
 import psycopg2.errors
 from datetime import datetime
+from django.core.validators import MaxValueValidator, MinValueValidator
 
-class Sample(models.Model):
-    attachment = models.FileField()
-
-class Profile(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-    )
-    website = models.URLField(blank=True)
-    bio = models.CharField(max_length=240, blank=True)
-
-    def __str__(self):
-        return self.user.get_username()
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name
-class Post(models.Model):
-    class Meta:
-        ordering = ["-publish_date"]
-
-    title = models.CharField(max_length=255, unique=True)
-    subtitle = models.CharField(max_length=255, blank=True)
-    slug = models.SlugField(max_length=255, unique=True)
-    body = models.TextField()
-    meta_description = models.CharField(max_length=150, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
-    publish_date = models.DateTimeField(blank=True, null=True)
-    published = models.BooleanField(default=False)
-
-    author = models.ForeignKey(Profile, on_delete=models.PROTECT)
-    tags = models.ManyToManyField(Tag, blank=True)
 
 class Device(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
     lat = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True)
     long = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True)
+
+class Sample(models.Model):
+    attachment = models.FileField()
+    device = models.ForeignKey(Device,on_delete=models.CASCADE)
 
 class SensorReading(models.Model):
     time = models.DateTimeField(primary_key=True, default=datetime.now)
@@ -76,7 +46,10 @@ class SensorReading(models.Model):
 
 class DeviceConfig(models.Model):
     device = models.ForeignKey(Device,on_delete=models.CASCADE)
-    bpm = models.DecimalField(max_digits=22, decimal_places=5, blank=True, null=True, default=0.5)
-    duty = models.DecimalField(max_digits=22, decimal_places=5, blank=True, null=True, default=0.022)
-    ledState = models.BooleanField(default=False)
-    pressureMax = models.DecimalField(max_digits=22, decimal_places=5, blank=True, null=True, default=70)
+    bpm = models.DecimalField(max_digits=22, decimal_places=3, blank=True, null=True, default=0.5)
+    duty = models.DecimalField(max_digits=22, decimal_places=4, blank=True, null=True, default=0.022)
+    ledState = models.IntegerField(
+        default=255,
+        validators=[MaxValueValidator(255), MinValueValidator(0)]
+     )
+    pressureMax = models.IntegerField( blank=True, null=True, default=70, validators=[MaxValueValidator(255), MinValueValidator(10)])

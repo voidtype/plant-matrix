@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import DeviceConfig, SensorReading
+from .models import DeviceConfig, SensorReading, Sample
 
 class DeviceConfigSerializer(serializers.HyperlinkedModelSerializer):
     device = serializers.UUIDField(source='device.id')
@@ -13,3 +13,8 @@ class SensorReadingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SensorReading
         fields = ('time','device','ledState', 'solenoidState','pumpState','psi')
+
+class SampleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sample
+        fields = ['attachment']
