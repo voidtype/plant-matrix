@@ -28,6 +28,7 @@ class SampleViewSet(viewsets.ModelViewSet):
 
 
 class DeviceConfigViewSet(viewsets.ModelViewSet):
+    #authentication_classes = []
     queryset = DeviceConfig.objects.all().order_by('device')
     def get_queryset(self):
         device = self.get_renderer_context()["request"].query_params.get('device')
@@ -91,11 +92,12 @@ def index(request):
 def upload(request):
     if request.method == 'POST' and request.FILES['files']:
         upload = request.FILES['files']
+        device = request.POST['device']
         fss = FileSystemStorage()
         uname = str(time.time()) + upload.name
         file = fss.save(uname, upload)
         file_url = fss.url(file)
-        Sample.objects.create(attachment=uname)
+        Sample.objects.create(attachment=uname,device=Device.objects.get(id=device))
         return HttpResponse({file_url})
     return request
 

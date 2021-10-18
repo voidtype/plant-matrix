@@ -50,8 +50,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -60,8 +60,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = ["http://"+ item for item in ALLOWED_HOSTS] #("http://localhost:8080",) #("http://localhost:8080",)
+CORS_ORIGIN_ALLOW_ALL = True
+#TODO resecure
+CORS_ORIGIN_WHITELIST = ['http://*']#["http://"+ item for item in ALLOWED_HOSTS] #("http://localhost:8080",) #("http://localhost:8080",)
 
 
 ROOT_URLCONF = 'app.urls'
