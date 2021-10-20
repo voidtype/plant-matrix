@@ -28,12 +28,14 @@ class SampleViewSet(viewsets.ModelViewSet):
 
 
 class DeviceConfigViewSet(viewsets.ModelViewSet):
-    #authentication_classes = []
+    #todo: secure
+    authentication_classes = []
     queryset = DeviceConfig.objects.all().order_by('device')
     def get_queryset(self):
         device = self.get_renderer_context()["request"].query_params.get('device')
         if device:
-            return DeviceConfig.objects.filter(device=Device(id=device))[0:]
+            print("it got called")
+            return DeviceConfig.objects.filter(device=Device(device=device))[0:]
         else:
             return self.queryset
     serializer_class = DeviceConfigSerializer
@@ -50,15 +52,16 @@ class SensorReadingViewSet(viewsets.ModelViewSet):
             pumpState = self.get_renderer_context()["request"].query_params.get('pumpState')
             solenoidState = self.get_renderer_context()["request"].query_params.get('solenoidState')
             psi = self.get_renderer_context()["request"].query_params.get('psi')
+            #TODO: this currently isn't working, and is falling though to the exception handler
             if (all(v is None for v in [ledState,solenoidState,pumpState,psi])):
                 print("lols")
-                return SensorReading.objects.filter(device=Device(id=device))
+                return SensorReading.objects.filter(device=Device(id=device))[:600:-1]
             else:
                 #if we're updating the entire set of variables, no need to get the most recent readings
                 if all([ledState,solenoidState,pumpState,psi]):
                     obj = SensorReading(
                     device=Device(id=device),
-                    ledState=bool(ledState),
+                    ledState=ledState,
                     solenoidState=bool(solenoidState),
                     pumpState=bool(pumpState),
                     psi=psi)
@@ -72,10 +75,10 @@ class SensorReadingViewSet(viewsets.ModelViewSet):
                     #obj = SensorReading.objects.create(device,ledState,solenoidState,pumpState,psi)
                     print([ledState,solenoidState,pumpState,psi])
 
-                    return SensorReading.objects.all()
+                    return SensorReading.objects.all().order_by('-time')[:600:-1]
         #TODO: add specificity to this handler
         except MultiValueDictKeyError as e: #if the device ID isn't found in the request, get all the objects
-            return SensorReading.objects.all()
+            return SensorReading.objects.all().order_by('-time')[:600:-1]
 
 
 

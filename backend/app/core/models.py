@@ -20,9 +20,9 @@ class SensorReading(models.Model):
     time = models.DateTimeField(primary_key=True, default=datetime.now)
     device = models.ForeignKey(Device,on_delete=models.CASCADE)
     psi = models.FloatField()
-    ledState = models.BooleanField()
-    solenoidState = models.BooleanField()
-    pumpState = models.BooleanField()
+    ledState = models.IntegerField()
+    solenoidState = models.IntegerField()
+    pumpState = models.IntegerField()
     
     #let's overload the save function to account for pk collisions on the time var
     def save(self, *args, **kwargs):
@@ -33,7 +33,6 @@ class SensorReading(models.Model):
         """Recursivly try to save by incrementing the timestamp on duplicate error"""
         try:
             super().save(*args, **kwargs)
-            print("saved via super")
         except psycopg2.errors.UniqueViolation as exception:
             print("oh no")
             # Only handle the error:
@@ -45,7 +44,7 @@ class SensorReading(models.Model):
                 self.save_and_smear_timestamp(*args, **kwargs)
 
 class DeviceConfig(models.Model):
-    device = models.ForeignKey(Device,on_delete=models.CASCADE)
+    device = models.OneToOneField(Device,primary_key=True,on_delete=models.CASCADE)
     bpm = models.DecimalField(max_digits=22, decimal_places=3, blank=True, null=True, default=0.5)
     duty = models.DecimalField(max_digits=22, decimal_places=4, blank=True, null=True, default=0.022)
     ledState = models.IntegerField(
