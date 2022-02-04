@@ -28,6 +28,6 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password':{'write_only':True,'required':True}}
     def create(self,validated_data):
         if not validated_data.get('email'):
-            raise ValueError('User must provide an email address to register')
+            raise serializers.ValidationError('User must provide an email address to register')
         user = User.objects.create_user(**validated_data)
         return user

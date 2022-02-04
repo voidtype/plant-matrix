@@ -50,8 +50,8 @@ class Register extends Component {
             <input type="email" name="email" value={this.state.credentials.email} onChange={this.inputChanged}></input></label>
             <br />
             <button onClick={this.register}>Register</button>
-          </div>
           <div className="errors">{this.state.errors}</div>
+          </div>
           </div>
         );
     }
