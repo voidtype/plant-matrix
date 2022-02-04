@@ -4,6 +4,7 @@ from django.template import loader
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.models import User
 
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from rest_framework.response import Response
@@ -16,7 +17,7 @@ from .models import DeviceConfig,SensorReading,Device,Sample
 
 from rest_framework import viewsets
 
-from .serializers import DeviceConfigSerializer,SensorReadingSerializer,SampleSerializer
+from .serializers import DeviceConfigSerializer,SensorReadingSerializer,SampleSerializer,UserSerializer
 
 
 class SampleViewSet(viewsets.ModelViewSet):
@@ -26,6 +27,10 @@ class SampleViewSet(viewsets.ModelViewSet):
     def retrieve(self,request,device):
         return Response(self.serializer_class(Sample.objects.filter(device=device).order_by('-id').first()).data)
 
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class DeviceConfigViewSet(viewsets.ModelViewSet):
     #todo: secure
@@ -104,4 +109,6 @@ def upload(request):
         return HttpResponse({file_url})
     return request
 
-# Create your views here.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

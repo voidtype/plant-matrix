@@ -20,12 +20,17 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from graphene_django.views import GraphQLView
 from core import views
+from rest_framework.authtoken import views as authviews
+
 
 urlpatterns = [
     path('', include('core.urls')),
     path('admin/', admin.site.urls),
     path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path("upload", views.upload, name="upload"),
+    path('api-token-auth/', authviews.obtain_auth_token)
+
+    
 
 ]
 

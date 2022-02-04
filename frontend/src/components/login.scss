@@ -1,0 +1,28 @@
+.base-container {
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    .logo{
+        margin-bottom: -100px;
+      
+      }
+      
+      .logocontainer{
+      
+        overflow: hidden;
+      
+      }
+
+      a  {
+          color:white;
+      }
+      .errors{
+          color:red;
+      }
+}
