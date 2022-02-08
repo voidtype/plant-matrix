@@ -1,3 +1,5 @@
 *.yml
 .env
 *pycache*
+backend/proxy/data/*
+backend/app/core/migrations/*
