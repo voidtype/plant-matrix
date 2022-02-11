@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
 import './login.scss';
 
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
+
+
 
 class Login extends Component {
     state = {
@@ -12,7 +15,7 @@ class Login extends Component {
 
     login = event => {
         console.log(this.state.credentials);
-        fetch('http://localhost:81/api-token-auth/',
+        fetch(`${API_ENDPOINT}/api-token-auth/`,
         {
             method: 'POST',
             'headers':{'Content-Type':'application/json'},

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './login.scss';
 
+//TODO: move this to a more broad reaching context 
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
+
 class Register extends Component {
     state = {
         credentials: {username: '', password: '',email:''},
@@ -10,7 +13,7 @@ class Register extends Component {
 
     register = event => {
         console.log(this.state.credentials);
-        fetch('http://localhost:81/users/',
+        fetch(`${API_ENDPOINT}/api/users/`,
         {
             method: 'POST',
             'headers':{'Content-Type':'application/json'},
