@@ -22,7 +22,7 @@ server {
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     location /static {
-        alias /vol/static;
+        try_files /vol/$uri @react;
     }
 
     location /api {
@@ -31,6 +31,10 @@ server {
         client_max_body_size    10M;
         proxy_set_header X-Forwarded-Proto $scheme;
 
+    }
+
+    location @react{
+        root /build/;
     }
 
     location / {
