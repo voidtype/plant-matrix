@@ -34,6 +34,6 @@ server {
     }
 
     location / {
-        alias /build;
+        alias /build/;
     }
 }
