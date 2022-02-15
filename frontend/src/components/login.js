@@ -22,12 +22,12 @@ class Login extends Component {
             body: JSON.stringify(this.state.credentials)
         }
         ).then(data=>{
-            if(!data.ok){throw data}
-            data.json()
+            if(!data.ok){console.log( data); throw data};
+            return data.json();
         })
         .then(
         data => {
-            console.log(data.token); 
+            this.props.userLogin(data.token); 
         }).catch(errors => errors.json())
         .then(errors => this.setState({errors: JSON.stringify(errors)}))
         

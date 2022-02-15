@@ -9,6 +9,7 @@ router.register(r'configs', views.DeviceConfigViewSet)
 router.register(r'readings', views.SensorReadingViewSet)
 router.register(r'samples', views.SampleViewSet)
 router.register(r'users', views.UserViewSet)
+router.register(r'devices', views.DeviceViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

@@ -2,7 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 
-from .models import DeviceConfig, SensorReading, Sample
+
+from .models import DeviceConfig, SensorReading, Sample, Device
 
 class DeviceConfigSerializer(serializers.HyperlinkedModelSerializer):
     #device = serializers.UUIDField(source='device.id')
@@ -31,3 +32,9 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('User must provide an email address to register')
         user = User.objects.create_user(**validated_data)
         return user
+
+class DeviceSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Device
+        fields = ('id','lat','long')

@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from rest_framework.response import Response
@@ -17,7 +19,7 @@ from .models import DeviceConfig,SensorReading,Device,Sample
 
 from rest_framework import viewsets
 
-from .serializers import DeviceConfigSerializer,SensorReadingSerializer,SampleSerializer,UserSerializer
+from .serializers import DeviceConfigSerializer,DeviceSerializer,SensorReadingSerializer,SampleSerializer,UserSerializer
 
 
 class SampleViewSet(viewsets.ModelViewSet):
@@ -31,6 +33,12 @@ class SampleViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class DeviceViewSet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated,  ]
+    queryset = Device.objects.all()
+    serializer_class = DeviceSerializer
 
 class DeviceConfigViewSet(viewsets.ModelViewSet):
     #todo: secure
