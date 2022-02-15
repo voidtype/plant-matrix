@@ -38,6 +38,7 @@ server {
     }
 
     location / {
-        alias /build/;
+        root /build/;
+	try_files $uri $uri/ /index.html;
     }
 }
