@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 
 
@@ -117,6 +118,7 @@ def upload(request):
         return HttpResponse({file_url})
     return request
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+@api_view(['GET'])
+def current_user(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)

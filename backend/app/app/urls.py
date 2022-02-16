@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path("upload", views.upload, name="upload"),
+    path("users/current", views.current_user),
     path('api-token-auth/', authviews.obtain_auth_token)
 
     

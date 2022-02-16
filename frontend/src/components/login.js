@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import { Navigate } from 'react-router-dom';
+
 import './login.scss';
 
 const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
@@ -54,6 +56,7 @@ class Login extends Component {
             <br />
             <Button onClick={this.login}>Login</Button>
             <div className="errors">{this.state.errors}</div>
+            {this.props.token && <Navigate to="/devices"/>}
             </div>
           </div>
         );
