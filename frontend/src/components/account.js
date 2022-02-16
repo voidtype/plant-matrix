@@ -18,7 +18,7 @@ function Account(props){
         //if we already know who's logged in, don't bother the back end
         if (user){return};
         console.log("current user: " + user);
-        fetch(`${API_ENDPOINT}/users/current`,
+        fetch(`${API_ENDPOINT}/api/users/current`,
         {
             method: 'GET',
             'headers':{
