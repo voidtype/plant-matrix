@@ -12,6 +12,8 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 
 function App() {
+  document.title = "Teraharvest";
+
 //  const [isLoginActive, setLoginActive]= useState(true);
   const [token, setToken] = useState('');
   const userLogin = (tok) => {
