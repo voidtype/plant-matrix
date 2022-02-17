@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
+import {Card} from 'react-bootstrap'
 import './devices.scss';
-import Device from './device';
 
 const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 
 
 
-class Devices extends Component {
+class Device extends Component {
 
     state = {
-        devices: []
+        sample: ""
     }
 
-    loadDevices = () => {
-        fetch(`${API_ENDPOINT}/api/devices/`,
+    componentDidMount(){
+        this.loadDevice();
+    }
+
+    loadDevice = () => {
+        fetch(`${API_ENDPOINT}/api/samples/${this.props.uuid}`,
         {
             method: 'GET',
             'headers':{
@@ -26,7 +30,7 @@ class Devices extends Component {
         })
         .then(
         data => 
-            this.setState({devices:data}) 
+            this.setState({sample:data.attachment}) 
         ).catch(errors => errors.json())
         .then(errors => this.setState({errors: JSON.stringify(errors)}))
         
@@ -34,17 +38,11 @@ class Devices extends Component {
 
     render() {
         return(
-            <div>
-                <h1>Devices</h1>
-                <div className="container">
-                {this.state.devices?.map( device => {
-                    return <Device key={device.id} uuid={device.id} token={this.props.token}/>
-                })}
-                </div>
-                <button onClick={this.loadDevices}>Get Devices</button>
-          </div>
+
+             <Card border="light" bg="dark" className="device" ><Card.Img variant="top" src={process.env.REACT_APP_API_ENDPOINT+ this.state.sample}/>{this.props.uuid}</Card>
+                
         );
     }
 }
 
-export default Devices;
+export default Device;
