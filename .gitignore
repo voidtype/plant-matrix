@@ -3,3 +3,4 @@
 *pycache*
 backend/proxy/data/*
 backend/app/core/migrations/*
+backend/redeploy.sh
