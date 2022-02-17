@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button'
-import './login.scss';
+import {Card} from 'react-bootstrap'
+import './devices.scss';
 
 const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 
@@ -36,9 +36,11 @@ class Devices extends Component {
         return(
             <div>
                 <h1>Devices</h1>
+                <div className="container">
                 {this.state.devices?.map( device => {
-                    return <h3 key={device.id}>{device.id}</h3>
+                    return <Card border="light" bg="dark" className="device" key={device.id}>{device.id}</Card>
                 })}
+                </div>
                 <button onClick={this.loadDevices}>Get Devices</button>
           </div>
         );
