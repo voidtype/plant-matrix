@@ -34,7 +34,7 @@ function Account(props){
             setUser(data.username) 
         ).catch(errors => errors.json())
         .then(errors => this.setState({errors: JSON.stringify(errors)}))
-    })
+    },[props.token]);
 
     function logout(){
         props.userLogin ("");

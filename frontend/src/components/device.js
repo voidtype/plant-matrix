@@ -1,28 +1,23 @@
-import React, { Component } from 'react';
-import {Card} from 'react-bootstrap'
-import './devices.scss';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 
 const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 
 
 
-class Device extends Component {
+function Device (props)  {
 
-    state = {
-        sample: ""
-    }
+    let {uuid} = useParams();
 
-    componentDidMount(){
-        this.loadDevice();
-    }
 
-    loadDevice = () => {
-        fetch(`${API_ENDPOINT}/api/samples/${this.props.uuid}`,
+
+    const loadImage = () => {
+        fetch(`${API_ENDPOINT}/api/samples/${uuid}`,
         {
             method: 'GET',
             'headers':{
                 'Content-Type':'application/json',
-                Authorization:`Token  ${this.props.token}`
+                Authorization:`Token  ${props.token}`
             }
         }).then(data=>{
             if(!data.ok){console.log( data); throw data};
@@ -36,13 +31,12 @@ class Device extends Component {
         
     }
 
-    render() {
-        return(
+    return(
 
-             <Card border="light" bg="dark" className="device" ><Card.Img variant="top" src={process.env.REACT_APP_API_ENDPOINT+ this.state.sample}/>{this.props.uuid}</Card>
-                
-        );
-    }
+            <div>{uuid}</div>
+            
+    );
+    
 }
 
 export default Device;

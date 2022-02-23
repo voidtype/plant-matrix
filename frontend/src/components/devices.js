@@ -1,24 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './devices.scss';
-import Device from './device';
+import DeviceCard from './deviceCard';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 
 
 
-class Devices extends Component {
+function Devices(props) {
 
-    state = {
-        devices: []
-    }
 
-    loadDevices = () => {
+    const [devices, setDevices] = useState([]);
+    const [error, setError] = useState("");
+
+
+
+    const loadDevices = () => {
         fetch(`${API_ENDPOINT}/api/devices/`,
         {
             method: 'GET',
             'headers':{
                 'Content-Type':'application/json',
-                Authorization:`Token  ${this.props.token}`
+                Authorization:`Token  ${props.token}`
             }
         }).then(data=>{
             if(!data.ok){console.log( data); throw data};
@@ -26,25 +30,23 @@ class Devices extends Component {
         })
         .then(
         data => 
-            this.setState({devices:data}) 
+            setDevices(data) 
         ).catch(errors => errors.json())
-        .then(errors => this.setState({errors: JSON.stringify(errors)}))
+        .then(errors => setError(JSON.stringify(errors)))
         
     }
 
-    render() {
-        return(
-            <div>
-                <h1>Devices</h1>
-                <div className="container">
-                {this.state.devices?.map( device => {
-                    return <Device key={device.id} uuid={device.id} token={this.props.token}/>
-                })}
-                </div>
-                <button onClick={this.loadDevices}>Get Devices</button>
-          </div>
-        );
-    }
+    return(
+        <div>
+            <h1>Devices</h1>
+            <div className="container">
+            {devices?.map( device => {
+                return <DeviceCard key={device.id} uuid={device.id} token={props.token} />
+            })}
+            </div>
+            <button onClick={loadDevices}>Get Devices</button>
+        </div>
+    );
 }
 
 export default Devices;

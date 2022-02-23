@@ -5,6 +5,7 @@ import {useState} from 'react';
 import Login from './components/login';
 import Nav from './components/nav';
 import Devices from './components/devices';
+import Device from './components/device'
 
 import Register from './components/register';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
@@ -29,6 +30,7 @@ function App() {
 
               <Route path ="/login" element={<Login userLogin={userLogin} token={token}/>} />
               <Route path ="/devices" element={<Devices token={token}/>} />
+              <Route path ="/device/:uuid" element={<Device />} />
               <Route path ="/register" element={<Register />} />
             </Routes>
 
